@@ -5,7 +5,7 @@ fn main() {
     // Input and Output file name
     let filename = "sample.txt";
     // The nubmer of new codes to generate
-    let gen_code_num = 10;
+    let gen_code_num = 30;
     let code_length = 16;
 
     let prev_codes : Vec<_> = 
@@ -17,7 +17,10 @@ fn main() {
 
     let codes = code::gen_codes(&prev_codes, &chars, code_length, gen_code_num);
 
-    match file::write_string(&filename, &format!("{}\n{}", prev_codes.join("\n"), codes.join("\n"))) {
+    match file::write_string(
+        &filename, 
+        &format!("{}{}", if prev_codes.len() == 0 {""} else {"\n"}, codes.join("\n")), 
+        true) {
         Ok(_) => println!("Write Codes to {}", &filename),
         Err(e) => println!("{:?}", e),
     }

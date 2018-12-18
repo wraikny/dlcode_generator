@@ -3,7 +3,7 @@ extern crate failure;
 
 use std::fs::OpenOptions;
 use std::io::prelude::*;
-use std::{fs, io};
+use std::{io};
 
 pub fn load_string(path : &str) -> io::Result<String> {
     let mut file = OpenOptions::new().read(true).open(path)?;
@@ -14,14 +14,12 @@ pub fn load_string(path : &str) -> io::Result<String> {
     Ok(contents)
 }
 
-pub fn write_string(path : &str, string : &str) -> Result<(), failure::Error> {
-    let mut file = match OpenOptions::new().write(true).open(path) {
-        Ok(f) => f,
-        Err(e) => {
-            println!("File Open to Write Error: {:?}", e);
-            fs::File::create(path)?
-        }
-    };
+pub fn write_string(path : &str, string : &str, append : bool) -> Result<(), failure::Error> {
+    let mut file = OpenOptions::new()
+        .write(true)
+        .append(append)
+        .create(true)
+        .open(path)?;
     
     file.write_all(string.as_bytes())?;
 
